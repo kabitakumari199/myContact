@@ -2,12 +2,17 @@ import React from 'react';
 import Header from '../Header/Header';
 import axios from 'axios';
 
+
 class EditContact extends React.Component {
 
     constructor(props) {
         super(props);
         this.state={
-         userData:''
+         userData:[],
+         profile_name:'',
+         name:'',
+         
+
         }
 
     }
@@ -17,24 +22,27 @@ class EditContact extends React.Component {
         if(!loggingIn){
           this.props.history.push("/");
         }
-        console.log('id ksdkkdkdk ',this.props.match.params.id);
         axios.get('http://localhost:7000/api/user/viewContact/'+this.props.match.params.id)
           .then(response => {
-              console.log('view',response);
-              
 
-              this.setState({ 
-                userData: response.data, 
-             });
+              response.data.map(item=>{
+                  this.setState({
+                    profile_name:item.profile_name,
+                    name:item.name,
+                    userData: response.data
+                  })
+              })
           })
           .catch(function (error) {
               console.log(error);
           })
      }
 
+    
+
  
     render() {
-         const {userData} = this.state;
+         const {userData,name,profile_name} = this.state;
          return (
             <>
             <Header />
@@ -49,9 +57,9 @@ class EditContact extends React.Component {
                     </div>
                     <div className="col-md-6">
                     <div className="profile-head">
+                      
                         <h5>
-                        Kshiti Ghelani 
-                       <pre>{JSON.stringify(this.state.userData,null,2)}</pre>
+                        {name}
                         </h5>
                         <ul className="nav nav-tabs" id="myTab" role="tablist">
                         <li className="nav-item">
@@ -79,49 +87,56 @@ class EditContact extends React.Component {
                     </div>
                     <div className="col-md-8">
                     <div className="tab-content profile-tab" id="myTabContent">
-                    <div className="row">
-                            <div className="col-md-6">
-                            <label>User Id</label>
+                    {userData.map(user=>{
+                            return(
+                                <>
+                              
+                            <div className="row">
+                                <div className="col-md-6">
+                                <label>Name</label>
+                                </div>
+                                <div className="col-md-6">
+                                <p>{user.name}</p>
+                                </div>
                             </div>
-                            <div className="col-md-6">
-                            <p>Kshiti123</p>
+                            <div className="row">
+                                <div className="col-md-6">
+                                <label>Email</label>
+                                </div>
+                                <div className="col-md-6">
+                                <p>{user.email_id}</p>
+                                </div>
                             </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-md-6">
-                            <label>Name</label>
+                            <div className="row">
+                                <div className="col-md-6">
+                                <label>Phone</label>
+                                </div>
+                                <div className="col-md-6">
+                                <p>{user.contact_no}</p>
+                                </div>
                             </div>
-                            <div className="col-md-6">
-                            <p>{this.state.userData.name}</p>
+                            <div className="row">
+                                <div className="col-md-6">
+                                <label>Contact Type</label>
+                                </div>
+                                <div className="col-md-6">
+                                <p>{user.contact_type}</p>
+                                </div>
                             </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-md-6">
-                            <label>Email</label>
+                            <div className="row">
+                                <div className="col-md-6">
+                                <label>createdAt</label>
+                                </div>
+                                <div className="col-md-6">
+                               <p>{user.createdAt}</p>
+                                </div>
                             </div>
-                            <div className="col-md-6">
-                            <p>kshitighelani@gmail.com</p>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-md-6">
-                            <label>Phone</label>
-                            </div>
-                            <div className="col-md-6">
-                            <p>123 456 7890</p>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-md-6">
-                            <label>Profession</label>
-                            </div>
-                            <div className="col-md-6">
-                            <p>Web Developer and Designer</p>
-                            </div>
-                        </div>
-                        </div>
-
-                        </div>
+                           </>
+                            )
+                        })}
+                    
+                    </div>
+                    </div>
                     </div>
                 
                 </form>           

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Header from '../Header/Header';
 import './table.css';
 import * as contactsAction from '../../actions/contactAction';
+import Pagination from "react-js-pagination";
 
 class MyContacts extends React.Component {
 
@@ -11,6 +12,8 @@ class MyContacts extends React.Component {
         super(props);
         this.state = {
             isLoading: false,
+            page_num:'',
+            activePage: 1,
         }
     }
 
@@ -21,6 +24,7 @@ class MyContacts extends React.Component {
         }
         const {user_id} = 1;
         this.props.fetchContact();
+        this.props.fetchTotal();
      }
 
      deletUser = (id) => {
@@ -33,9 +37,19 @@ class MyContacts extends React.Component {
      editUser = (id) =>{
          alert('its in progress');
      }
+     handlePageChange = (pageNumber) => {
+         console.log('pagination',pageNumber);
+         this.setState({activePage:pageNumber});
+         const obj = {
+            page_num:pageNumber,
+            };
+         const data = 10;
+         this.props.filterContact(obj);
+
+    }
  
     render() {
-        const {contactList} = this.props;
+        const {contactList,totalCount} = this.props;
         const{isLoading}= this.state;
 
          return (
@@ -83,13 +97,14 @@ class MyContacts extends React.Component {
                         </table>
                         <div className="clearfix">
                             <ul className="pagination">
-                            <li className="page-item disabled"><a href="#">Previous</a></li>
-                            <li className="page-item"><a href="#" className="page-link">1</a></li>
-                            <li className="page-item"><a href="#" className="page-link">2</a></li>
-                            <li className="page-item active"><a href="#" className="page-link">3</a></li>
-                            <li className="page-item"><a href="#" className="page-link">4</a></li>
-                            <li className="page-item"><a href="#" className="page-link">5</a></li>
-                            <li className="page-item"><a href="#" className="page-link">Next</a></li>
+                            <Pagination
+                                hideDisabled
+                                activePage={this.state.activePage}
+                                itemsCountPerPage={5}
+                                totalItemsCount={totalCount.length}
+                                onChange={this.handlePageChange}
+                            />
+                            
                             </ul>
                         </div>
                         </div>
@@ -105,6 +120,7 @@ const mapStateToProps = (state)=> {
     return {
         contactList:state.fechContactReducer.contacts,
         userinfo:state.loginReducer.currentUser,
+        totalCount:state.fechContactReducer.totalCount
         
     };
   }

@@ -16,6 +16,38 @@ export function fetchContact() {
 
 }
 
+
+export function fetchTotal() {
+    return (dispatch) => {
+        axios.post(api+'/user/fetchCount')
+        .then(response => {
+            console.log('response data',response.data);
+            dispatch({ type: 'FETCH_COUNT', totalCount:response.data});
+          })
+        .catch(function (error) {
+            alert('Network Issue');
+        })
+    }
+
+}
+
+export function filterContact(filter) {
+    return (dispatch) => {
+        const filterData = filter;
+        axios.post(api+'/user/fetchContact',filterData)
+        .then(response => {
+            console.log('filter data',response.data);
+            dispatch({ type: 'FILTER_COUNT', filter:response.data});
+          })
+        .catch(function (error) {
+            alert('Network Issue');
+        })
+    }
+
+}
+
+    
+
 export function deleteContact(id){
     return (dispatch) => {
         dispatch({type:"DELETE_CONTACT",id:id});

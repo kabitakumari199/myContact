@@ -1,7 +1,8 @@
 
 
 const initialState = {
-    contacts:[]
+    contacts:[],
+    totalCount:[]
 }
 
 const fetchContactReducer =(state=initialState, action)=>{
@@ -21,6 +22,14 @@ const fetchContactReducer =(state=initialState, action)=>{
                 ...state,
                  contacts:data
             }
+        }
+        case 'FETCH_COUNT':{
+            return {
+                ...state, totalCount:action.totalCount };
+        }
+        case 'FILTER_COUNT':{
+            return {
+                ...state, contacts:action.filter };
         }
         default:
         return state;
